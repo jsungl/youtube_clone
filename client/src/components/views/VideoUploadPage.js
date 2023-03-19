@@ -3,12 +3,16 @@ import { PlusOutlined } from '@ant-design/icons';
 import Dropzone from 'react-dropzone';
 import { useState } from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 
 const { Title } = Typography;
 const { TextArea } = Input;
 
 export default function VideoUploadPage() {
-
+    const user = useSelector(state => state.user);
+    const navigate = useNavigate();
     const [videoTitle, setVideoTitle] = useState("");
     const [description, setDescription] = useState("");
     const [release, setRelease] = useState(0); // private: 0, public: 1
@@ -16,6 +20,7 @@ export default function VideoUploadPage() {
     const [filePath, setFilePath] = useState("");
     const [duration, setDuration] = useState("");
     const [thumbnailPath, setThumbnailPath] = useState("");
+    const [messageApi, contextHolder] = message.useMessage();
 
     const catOptions = [
         { value: 0, label: "Film & Animation"},
@@ -83,16 +88,48 @@ export default function VideoUploadPage() {
         setCategory(e);
     }
 
+    const onSubmitHandler = (e) => {
+        e.preventDefault();
+
+        let body = {
+            writer: user.userData._id,
+            title: videoTitle,
+            description: description,
+            privacy: release,
+            filePath: filePath,
+            category: catOptions.filter(data => data.value === category)[0].label,
+            duration: duration,
+            thumbnail: thumbnailPath,
+        }
+
+        axios.post('/api/video/uploadVideo', body)
+        .then(res => {
+            if(res.data.success) {
+                messageApi.open({
+                    type: 'success',
+                    content: '성공적으로 업로드하였습니다',
+                });
+
+                setTimeout(() => {
+                    navigate('/');
+                },3000)
+            }else {
+                alert('비디오 업로드에 실패하였습니다');
+            }
+        })
+
+    }
 
 
 
     return (
         <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
+            {contextHolder}
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                 <Title level={2}>Upload Video</Title>
             </div>
 
-            <Form onSubmit>
+            <Form onSubmit={onSubmitHandler}>
                 <div style={{ display: 'flex', justifyContent:'space-between' }}>
                     {/* Drop zone */}
                     <Dropzone onDrop={onVideoDrop} multiple={false} maxSize={1000000000}>
@@ -153,7 +190,7 @@ export default function VideoUploadPage() {
                 />
                 <br/>
                 <br/>
-                <Button type="primary" size="large">Submit</Button>
+                <Button type="primary" onClick={onSubmitHandler}>Upload</Button>
 
             </Form>
         </div>

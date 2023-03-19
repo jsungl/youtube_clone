@@ -6,6 +6,7 @@ import LandingPage from "./views/LandingPage";
 import LoginPage from "./views/LoginPage";
 import RegisterPage from "./views/RegisterPage";
 import VideoUploadPage from './views/VideoUploadPage';
+import DetailVideoPage from './views/DetailVideoPage/DetailVideoPage';
 
 
 export default function App() {
@@ -14,9 +15,10 @@ export default function App() {
       <Route path='/' element={<Layout/>}>
         <Route index element={<LandingPage/>} />
         <Route path='video/upload' element={<VideoUploadPage/>} />
+        <Route path='video/:videoId' element={<DetailVideoPage />} />
       </Route>
-        <Route path='/login' element={<LoginPage/>} />
-        <Route path='/register' element={<RegisterPage/>} />
+      <Route path='/login' element={<LoginPage/>} />
+      <Route path='/register' element={<RegisterPage/>} />
     </Routes>
   );
 }

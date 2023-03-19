@@ -1,7 +1,5 @@
 import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -9,9 +7,37 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import React from 'react';
+import Auth from '../../hoc/auth';
+import { loginUser } from '../../_actions/user_actions';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 
-export default function LoginPage() {
+
+function LoginPage() {
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const onSubmitHandler = (e) => {
+        e.preventDefault();
+        const data = new FormData(e.currentTarget);
+        let body = {
+            email: data.get('email'),
+            password: data.get('password'),
+        };
+
+        dispatch(loginUser(body)) // loginUser라는 action을 실행
+        .then(res => {
+            //console.log(res);
+            if(res.payload.loginSuccess) {
+                navigate('/', { state: { login: true } });
+            }else {
+                alert('로그인 실패');
+            }
+        });
+    }
 
     return(
         <Container maxWidth="md">
@@ -29,7 +55,7 @@ export default function LoginPage() {
                 <Typography component="h1" variant="h5" sx={{ mb: 4 }}>
                     Sign in
                 </Typography>
-                <Box>
+                <Box component="form" onSubmit={onSubmitHandler}>
                     <TextField
                         label="Email Address"
                         required
@@ -47,10 +73,6 @@ export default function LoginPage() {
                         name="password"
                         autoComplete="current-password"
                         margin="normal"
-                    />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
                     />
                     <Button
                         type="submit"
@@ -73,3 +95,5 @@ export default function LoginPage() {
         </Container>
     );
 }
+
+export default Auth(LoginPage, false)

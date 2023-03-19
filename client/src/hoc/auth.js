@@ -1,41 +1,53 @@
 import React, { useEffect } from 'react';
 import { auth } from '../_actions/user_actions';
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-// export default function Auth(SpecificComponent, option, adminRoute = null) {
-//     function AuthenticationCheck(props) {
+export default function authentication (SpecificComponent, option, adminRoute = null) {
 
-//         let user = useSelector(state => state.user);
-//         const dispatch = useDispatch();
+    /**
+     * option
+     * null => 아무나 출입 가능한 페이지
+     * true => 로그인한 유저만 출입 가능한 페이지
+     * false => 로그인한 유저는 출입 불가능한 페이지
+     */
 
-//         useEffect(() => {
-//             //To know my current status, send Auth request 
-//             dispatch(auth()).then(response => {
-//                 //Not Loggined in Status 
-//                 if (!response.payload.isAuth) {
-//                     if (option) {
-//                         props.history.push('/login')
-//                     }
-//                     //Loggined in Status 
-//                 } else {
-//                     //supposed to be Admin page, but not admin person wants to go inside
-//                     if (adminRoute && !response.payload.isAdmin) {
-//                         props.history.push('/')
-//                     }
-//                     //Logged in Status, but Try to go into log in page 
-//                     else {
-//                         if (option === false) {
-//                             props.history.push('/')
-//                         }
-//                     }
-//                 }
-//             })
+    function AuthenticationCheck() {
+        const dispatch = useDispatch();
+        const navigate = useNavigate();
 
-//         }, [])
+        useEffect(() => {
+            dispatch(auth()).then(res => {
+                console.log(res);
 
-//         return (
-//             <SpecificComponent {...props} user={user} />
-//         )
-//     }
-//     return AuthenticationCheck
-// }
+                // 로그인하지 않은 상태
+                if(!res.payload.isAuth) {
+                    if(option) {
+                        // 로그인이 필요한 페이지에 들어가려할 때
+                        navigate('/login');
+                    }
+                }else {
+                    // 로그인 한 상태
+                    
+                    if(adminRoute && !res.value.isAdmin) {
+                        // admin이 아닌데 admin 페이지에 들어가려할 때
+                        navigate('/', { state: { login: true } });
+                    }else {
+                        if(!option) {
+                            // 로그인한 유저가 로그인, 회원가입 페이지에 들어가려할 때
+                            navigate('/', { state: { login: true } });
+                        }
+                    }
+
+                }
+            })
+        },[dispatch, navigate])
+
+        return (
+            <SpecificComponent/>
+        )
+    }
+
+
+    return AuthenticationCheck
+}

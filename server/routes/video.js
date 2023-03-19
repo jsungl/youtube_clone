@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 var ffmpeg = require('fluent-ffmpeg');
+const { Video } = require('../models/Video');
 
 
 let storage = multer.diskStorage({
@@ -70,5 +71,37 @@ router.post('/thumbnail', (req,res) => {
     })
 });
 
+router.post('/uploadVideo', (req,res) => {
+    // DB에 비디오 정보 저장
+    const video = new Video(req.body);
+
+    video.save().then(() => {
+        return res.status(200).json({ success: true })
+    })
+    .catch(err => {
+        res.json({ success: false, err })
+    })
+
+});
+
+router.get('/getVideos', (req, res) => {
+    Video.find()
+        .populate('writer')
+        .exec()
+    .then((videos) => {
+        return res.status(200).json({ success: true, videos })
+    })
+    .catch(err => res.status(400).send(err))
+});
+
+router.post('/getVideoDetail', (req, res) => {
+    Video.findOne({ "_id": req.body.videoId })
+        .populate('writer')
+        .exec()
+    .then((videoDetail) => {
+        return res.status(200).json({ success: true, videoDetail })
+    })
+    .catch(err => res.status(400).send(err))
+});
 
 module.exports = router;

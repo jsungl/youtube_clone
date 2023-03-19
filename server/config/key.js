@@ -1,5 +1,7 @@
+require("dotenv").config();
+
 if (process.env.NODE_ENV === 'production') {
-    module.exports = require('./prod');
+    module.exports = { mongoURI : process.env.MONGO_URI_PROD }
 } else {
-    module.exports = require('./dev');
+    module.exports = { mongoURI : process.env.MONGO_URI_DEV }
 }
