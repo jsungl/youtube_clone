@@ -3,6 +3,7 @@ import { Avatar, Button, Input, Tooltip } from 'antd';
 import { Comment } from '@ant-design/compatible';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import LikeDislikes from './LikeDislikes';
 const { TextArea } = Input;
 
 
@@ -46,6 +47,7 @@ export default function SingleComment({ videoId, comment, refreshComment }) {
     }
 
     const actions = [
+        <LikeDislikes userId={user.userData.isAuth ? user.userData._id : false} commentId={comment._id} />,
         <span key="comment-basic-reply-to" onClick={onClickReplyOpen}>Reply to</span>
     ];
 

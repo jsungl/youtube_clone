@@ -6,6 +6,7 @@ import axios from 'axios';
 import SideVideo from './Sections/SideVideo';
 import Subscribe from './Sections/Subscribe';
 import Comment from './Sections/Comments';
+import LikeDislikes from './Sections/LikeDislikes';
 import { useSelector } from "react-redux";
 
 
@@ -70,7 +71,7 @@ function DetailVideoPage() {
                             dataSource={[videoDetail]}
                             renderItem={(item, index)=>(
                                 
-                                <List.Item actions={[subscribeButton]}>
+                                <List.Item actions={[<LikeDislikes video userId={user.userData.isAuth ? user.userData._id : false} videoId={videoId} /> ,subscribeButton]}>
                                     <List.Item.Meta
                                         avatar={<Avatar size={64} src={item.writer && item.writer.image} />}
                                         title={item.writer.name}
