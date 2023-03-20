@@ -5,12 +5,14 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import SideVideo from './Sections/SideVideo';
 import Subscribe from './Sections/Subscribe';
+import Comment from './Sections/Comments';
 import { useSelector } from "react-redux";
 
 
 function DetailVideoPage() {
     const { videoId } = useParams();
     const [videoDetail, setVideoDetail] = useState([]);
+    const [commentList, setCommentList] = useState([]);
     const user = useSelector(state => state.user);
     // console.log(user);
 
@@ -24,9 +26,36 @@ function DetailVideoPage() {
                 }
             })
 
+        // 해당 비디오에 대한 모든 댓글 가져오기
+        axios.get('/api/comment/getComments', {
+            params:{
+                videoId
+            }
+        })
+        .then(res=> {
+            if (res.data.success) {
+                // console.log('comments',res.data.comments);
+                setCommentList(res.data.comments)
+            }else {
+                alert('비디오 정보 가져오기 실패');
+            }
+        })
+
     },[videoId]);
 
+    const refreshComment = (newComment) => {
+        setCommentList(commentList.concat(newComment)); // 댓글을 저장할 때마다 새로 업데이트
+    }
+
     if(videoDetail.writer) {
+
+        let subscribeButton = <Subscribe userTo={videoDetail.writer._id} userFrom={false}/>
+
+        if(user.userData.isAuth) {
+            // 로그인 했다면
+            subscribeButton = videoDetail.writer._id !== user.userData._id && 
+            <Subscribe userTo={videoDetail.writer._id} userFrom={user.userData._id}/>
+        }
        
         return (
             <Row guttuer={[16, 24]}>
@@ -41,9 +70,9 @@ function DetailVideoPage() {
                             dataSource={[videoDetail]}
                             renderItem={(item, index)=>(
                                 
-                                <List.Item actions={[<Subscribe userTo={item.writer._id} userFrom={user.userData.isAuth ? user.userData._id : false}/>]}>
+                                <List.Item actions={[subscribeButton]}>
                                     <List.Item.Meta
-                                        avatar={<Avatar size={64} src="https://joesch.moe/api/v1/random?key=1" />}
+                                        avatar={<Avatar size={64} src={item.writer && item.writer.image} />}
                                         title={item.writer.name}
                                         description={item.description}
                                     />
@@ -52,7 +81,7 @@ function DetailVideoPage() {
                         />
 
                         {/* Comments */}
-
+                        <Comment videoId={videoId} commentList={commentList} refreshComment={refreshComment}/>            
 
                     </div>
 

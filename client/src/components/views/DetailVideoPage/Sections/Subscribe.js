@@ -20,7 +20,7 @@ export default function Subscribe({ userTo, userFrom }) {
         });
 
         // 구독중인지 확인
-        console.log(userFrom);
+        // console.log(userFrom);
         axios.post('/api/subscribe/subscribed', { userTo, userFrom })
         .then(res => {
             if(res.data.success) {
