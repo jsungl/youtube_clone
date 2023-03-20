@@ -35,6 +35,10 @@ export default function Subscribe({ userTo, userFrom }) {
     
     const onSubscribe = () => {
 
+        if(!userFrom) {
+            return alert('로그인을 먼저 해주세요');
+        }
+
         // 이미 구독중이라면
         if(subscribed) {
             axios.post('/api/subscribe/unSubscribe',{ userTo, userFrom })
