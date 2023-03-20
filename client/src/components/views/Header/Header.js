@@ -13,7 +13,7 @@ import axios from 'axios';
 export default function Header() {
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
-    console.log('header', user);
+    // console.log('header', user);
 
     const logoutHandler = () => {
         axios.get('/api/users/logout')
@@ -26,11 +26,13 @@ export default function Header() {
         })
     }
 
+
     if (user.userData && !user.userData.isAuth) {
+        // 비로그인
         return(
             <>
                 <Toolbar sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Button variant="text">Subscription</Button>
+                    {/* <Button variant="text">Subscription</Button> */}
                     <Typography
                         component="h2"
                         variant="h5"
@@ -51,10 +53,11 @@ export default function Header() {
         )
 
     }else {
+        // 로그인
         return (
             <>
                 <Toolbar sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Button variant="text">Subscription</Button>
+                    <Button variant="text" onClick={()=> navigate('/subscription')}>Subscription</Button>
                     <Typography
                         component="h2"
                         variant="h5"

@@ -64,6 +64,7 @@ function LoginPage() {
                         autoComplete="email"
                         autoFocus
                         margin="normal"
+                        value="bbb@naver.com"
                     />
                     <TextField
                         label="Password"
@@ -87,7 +88,7 @@ function LoginPage() {
                             <Link>Forgot password?</Link>
                         </Grid>
                         <Grid item>
-                            <Link>Sign Up</Link>
+                            <Link href='/register'>Sign Up</Link>
                         </Grid>
                     </Grid>
                 </Box>

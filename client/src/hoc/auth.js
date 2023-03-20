@@ -29,11 +29,11 @@ export default function authentication (SpecificComponent, option, adminRoute = 
                 }else {
                     // 로그인 한 상태
                     
-                    if(adminRoute && !res.value.isAdmin) {
+                    if(adminRoute && !res.payload.isAdmin) {
                         // admin이 아닌데 admin 페이지에 들어가려할 때
                         navigate('/', { state: { login: true } });
                     }else {
-                        if(!option) {
+                        if(option === false) {
                             // 로그인한 유저가 로그인, 회원가입 페이지에 들어가려할 때
                             navigate('/', { state: { login: true } });
                         }
