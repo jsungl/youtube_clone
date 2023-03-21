@@ -3,8 +3,9 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
-import Typography from '@mui/material/Typography';
-// import Link from '@mui/material/Link';
+import UploadIcon from '@mui/icons-material/Upload';
+import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import axios from 'axios';
@@ -32,17 +33,10 @@ export default function Header() {
         return(
             <>
                 <Toolbar sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    {/* <Button variant="text">Subscription</Button> */}
-                    <Typography
-                        component="h2"
-                        variant="h5"
-                        color="inherit"
-                        align="center"
-                        noWrap
-                        sx={{ flex: 1 }}
-                    >
-                        JStube
-                    </Typography>
+                    <Link href="/" underline="none" color="#fff" sx={{ px: "8px", "&:hover": { textDecoration: "none" } }}>
+                        <img src={'http://localhost:5000/static/images/HappyTubeLogo.png'} alt="Logo" height="50" width="120"/>
+                    </Link>
+                    <Box sx={{ flex: 1 }}/>
                     <IconButton>
                         <SearchIcon />
                     </IconButton>
@@ -57,21 +51,17 @@ export default function Header() {
         return (
             <>
                 <Toolbar sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <Link href="/" underline="none" color="#fff" sx={{ px: "8px", "&:hover": { textDecoration: "none" } }}>
+                        <img src={'http://localhost:5000/static/images/HappyTubeLogo.png'} alt="Logo" height="50" width="120"/>
+                    </Link>
                     <Button variant="text" onClick={()=> navigate('/subscription')}>Subscription</Button>
-                    <Typography
-                        component="h2"
-                        variant="h5"
-                        color="inherit"
-                        align="center"
-                        noWrap
-                        sx={{ flex: 1 }}
-                    >
-                        JStube
-                    </Typography>
+                    <Box sx={{ flex: 1 }}/>
                     <IconButton>
                         <SearchIcon />
                     </IconButton>
-                    <Button variant="text" onClick={() => navigate('/video/upload')}>Upload</Button>
+                    <IconButton onClick={() => navigate('/video/upload')}>
+                        <UploadIcon />
+                    </IconButton>
                     <Button variant="text" onClick={logoutHandler}>Logout</Button>
                 </Toolbar>
             </>

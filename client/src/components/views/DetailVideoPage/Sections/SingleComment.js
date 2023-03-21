@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Avatar, Button, Input, Tooltip } from 'antd';
+import { Avatar, Button, Input } from 'antd';
 import { Comment } from '@ant-design/compatible';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
@@ -23,6 +23,12 @@ export default function SingleComment({ videoId, comment, refreshComment }) {
 
     const onSubmit = (e) => {
         e.preventDefault();
+
+        if(!user.userData.isAuth) {
+            setCommentValue("");
+            setOpenReply(false);
+            return alert('로그인을 먼저 해주세요');
+        }
 
         let body = {
             content: commentValue,

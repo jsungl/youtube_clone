@@ -21,18 +21,8 @@ export default function LikeDislikes({ video, userId, videoId, commentId }) {
         }
     },[video, commentId, userId, videoId])
 
-    // let variable = {}
-    // if(video) {
-    //     // video에 대한 좋아요/싫어요
-    //     variable = { videoId, userId }
-    // }else {
-    //     // comment에 대한 좋아요/싫어요
-    //     variable = { commentId, userId }
-    // }
-
     
     useEffect(() => {
-
         
         axios.get('/api/like/getLikes', {
             params: variable
@@ -43,13 +33,16 @@ export default function LikeDislikes({ video, userId, videoId, commentId }) {
                 // 얼마나 많은 좋아요를 받았는지
                 setLikes(res.data.likes.length);
 
-                // 좋아요를 이미 눌렀는지
-                res.data.likes.map(like => {
-                    if (like.userId === userId) {
-                        // 좋아요에 대한 정보중에 현재 로그인한 사용자의 아이디가 있다면 이미 좋아요 누른 상태
-                        setLikeAction('liked');
-                    }
-                })
+                if(userId) {
+                    // 좋아요를 이미 눌렀는지
+                    res.data.likes.forEach(like => {
+                        if(like.userId === userId) {
+                            // 좋아요에 대한 정보중에 현재 로그인한 사용자의 아이디가 있다면 이미 좋아요 누른 상태
+                            setLikeAction('liked');
+                        }
+                    });
+                }
+
 
             }else {
                 alert('Likes에 정보 가져오기 실패');
@@ -66,13 +59,15 @@ export default function LikeDislikes({ video, userId, videoId, commentId }) {
                 // 얼마나 많은 싫어요를 받았는지
                 setDislikes(res.data.dislikes.length);
 
-                // 싫어요를 이미 눌렀는지
-                res.data.dislikes.map(dislike => {
-                    if (dislike.userId === userId) {
-                        // 싫어요에 대한 정보중에 현재 로그인한 사용자의 아이디가 있다면 이미 싫어요 누른 상태
-                        setDislikeAction('disliked');
-                    }
-                })
+                if(userId) {
+                    // 싫어요를 이미 눌렀는지
+                    res.data.dislikes.forEach(dislike => {
+                        if(dislike.userId === userId) {
+                            // 싫어요에 대한 정보중에 현재 로그인한 사용자의 아이디가 있다면 이미 싫어요 누른 상태
+                            setDislikeAction('disliked');
+                        }
+                    });
+                }
 
             }else {
                 alert('DisLikes에 정보 가져오기 실패');
@@ -85,76 +80,89 @@ export default function LikeDislikes({ video, userId, videoId, commentId }) {
 
     const onLike = () => {
 
-        if(likeAction === null) {
-            // 좋아요가 눌러져있지 않은 상태
-
-            axios.post('/api/like/upLike', variable)
-            .then(res => {
-                if(res.data.success) {
-                    setLikes(likes + 1);
-                    setLikeAction('liked');
-
-                    // 싫어요가 이미 눌러져있던 상태라면
-                    if(dislikeAction !== null) {
-                        setDislikeAction(null);
-                        setDislikes(dislikes - 1);
+        if(userId) {
+            if(likeAction === null) {
+                // 좋아요가 눌러져있지 않은 상태
+    
+                axios.post('/api/like/upLike', variable)
+                .then(res => {
+                    if(res.data.success) {
+                        setLikes(likes + 1);
+                        setLikeAction('liked');
+    
+                        // 싫어요가 이미 눌러져있던 상태라면
+                        if(dislikeAction !== null) {
+                            setDislikeAction(null);
+                            setDislikes(dislikes - 1);
+                        }
+    
+    
+                    }else {
+                        alert('좋아요 올리기 실패');
                     }
-
-
-                }else {
-                    alert('좋아요 올리기 실패');
-                }
-            })
+                })
+    
+            }else {
+                // 좋아요가 눌러져있는 상태
+                axios.post('/api/like/unLike', variable)
+                .then(res => {
+                    if(res.data.success) {
+                        setLikes(likes - 1);
+                        setLikeAction(null);
+                    }else {
+                        alert('좋아요 내리기 실패');
+                    }
+                })
+    
+            }
 
         }else {
-            // 좋아요가 눌러져있는 상태
-            axios.post('/api/like/unLike', variable)
-            .then(res => {
-                if(res.data.success) {
-                    setLikes(likes - 1);
-                    setLikeAction(null);
-                }else {
-                    alert('좋아요 내리기 실패');
-                }
-            })
-
+            alert('로그인을 먼저 해주세요');
         }
+
+        
     }
 
 
     const onDislike = () => {
-        if(dislikeAction !== null) {
-            // 싫어요가 눌러져있는 상태
 
-            axios.post('/api/like/unDislike', variable)
-            .then(res => {
-                if(res.data.success) {
-                    setDislikes(dislikes - 1);
-                    setDislikeAction(null);
-
-                }else {
-                    alert('싫어요 내리기 실패');
-                }
-            })
+        if(userId) {
+            if(dislikeAction !== null) {
+                // 싫어요가 눌러져있는 상태
+    
+                axios.post('/api/like/unDislike', variable)
+                .then(res => {
+                    if(res.data.success) {
+                        setDislikes(dislikes - 1);
+                        setDislikeAction(null);
+    
+                    }else {
+                        alert('싫어요 내리기 실패');
+                    }
+                })
+    
+            }else {
+                // 싫어요가 눌러져있지 않는 상태
+                axios.post('/api/like/upDislike', variable)
+                .then(res => {
+                    if(res.data.success) {
+                        setDislikes(dislikes + 1);
+                        setDislikeAction('disliked');
+    
+                        // 좋아요가 이미 눌러져있던 상태라면
+                        if(likeAction !== null) {
+                            setLikeAction(null);
+                            setLikes(likes - 1);
+                        }
+    
+                    }else {
+                        alert('좋아요 내리기 실패');
+                    }
+                })
+            }
 
         }else {
-            // 싫어요가 눌러져있지 않는 상태
-            axios.post('/api/like/upDislike', variable)
-            .then(res => {
-                if(res.data.success) {
-                    setDislikes(dislikes + 1);
-                    setDislikeAction('disliked');
-
-                    // 좋아요가 이미 눌러져있던 상태라면
-                    if(likeAction !== null) {
-                        setLikeAction(null);
-                        setLikes(likes - 1);
-                    }
-
-                }else {
-                    alert('좋아요 내리기 실패');
-                }
-            })
+            alert('로그인을 먼저 해주세요');
         }
     }
     

@@ -18,6 +18,7 @@ export default function Comments({ videoId, commentList, refreshComment }) {
         e.preventDefault();
 
         if(!user.userData.isAuth) {
+            setComment("");
             return alert('로그인을 먼저 해주세요');
         }
 

@@ -1,5 +1,4 @@
-import React, { Suspense } from 'react';
-//import Auth from "../hoc/auth";
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Layout from "./views/Layout";
 import LandingPage from "./views/LandingPage";

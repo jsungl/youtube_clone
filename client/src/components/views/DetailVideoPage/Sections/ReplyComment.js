@@ -8,13 +8,15 @@ export default function ReplyComment({ commentList, videoId, refreshComment, par
 
     useEffect(() => {
         let commentNumber = 0;
-        commentList.map((comment) => {
+
+        commentList.forEach((comment) => {
             if (comment.responseTo === parentCommentId) {
                 commentNumber++
             }
-            return commentNumber;
         })
+
         setChildCommentNumber(commentNumber);
+    
     },[commentList, parentCommentId])
 
 
