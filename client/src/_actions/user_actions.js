@@ -12,6 +12,17 @@ export function loginUser(dataToSubmit) {
     }
 }
 
+export function preRegisterUser(dataToSubmit) {
+
+    const request = axios.post('/api/users/preRegister', dataToSubmit).then(res => res.data)
+
+    // reducer로 리턴
+    return {
+        type: REGISTER_USER,
+        payload: request
+    }
+}
+
 
 export function registerUser(dataToSubmit) {
 

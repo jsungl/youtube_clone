@@ -66,7 +66,7 @@ function SubscriptionPage() {
                         description={
                             <div>
                                 <span>{video.writer.name} </span><br />
-                                <span>{video.views} views · {moment(video.createdAt).format("YYYY-MM-DD")}</span>
+                                <span>{video.views} views · {moment(video.createdAt).fromNow()}</span>
                             </div>
                         }
                     />

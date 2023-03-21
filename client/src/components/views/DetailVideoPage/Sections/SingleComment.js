@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Avatar, Button, Input } from 'antd';
+import { Avatar, Button, Input, Tooltip } from 'antd';
 import { Comment } from '@ant-design/compatible';
 import axios from 'axios';
+import moment from 'moment';
 import { useSelector } from 'react-redux';
 import LikeDislikes from './LikeDislikes';
 const { TextArea } = Input;
@@ -64,6 +65,11 @@ export default function SingleComment({ videoId, comment, refreshComment }) {
                 author={comment.writer.name}
                 avatar={<Avatar src={comment.writer.image} alt="image"/>}
                 content={<p>{comment.content}</p>}
+                datetime={
+                    <Tooltip title="2016-11-22 11:22:33">
+                      <span>{moment(comment.createdAt).fromNow()}</span>
+                    </Tooltip>
+                }
             />
             {
                 openReply && 

@@ -17,6 +17,29 @@ router.get('/auth', auth, (req, res) => {
     });
 });
 
+router.post('/preRegister', (req, res) => {
+    let nameErr = false;
+    let emailErr = false;
+
+    User.find({ $or: [ { email: req.body.email }, { name: req.body.name } ] })
+    .then(user => {
+
+        if(user.length === 0) {
+            return res.status(200).json({ success: true });
+        }else {
+            user.forEach((x) => {
+                if(x.name === req.body.name) nameErr = true;
+                if(x.email === req.body.email) emailErr = true;
+            })
+            res.status(200).json({ success: false, nameErr, emailErr })
+        }
+    })
+    .catch(err => {
+        return res.status(404).send(err);
+    })
+
+});
+
 router.post('/register', (req, res) => {
 
     const user = new User(req.body);

@@ -64,7 +64,6 @@ function LoginPage() {
                         autoComplete="email"
                         autoFocus
                         margin="normal"
-                        value="bbb@naver.com"
                     />
                     <TextField
                         label="Password"
